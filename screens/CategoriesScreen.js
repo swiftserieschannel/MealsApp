@@ -1,21 +1,44 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, Platform } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import CATEGORIES from '../data/dummy-data'
+import Colors  from '../constants/colors';
+
 
 const CategoriesScreen = props => {
-    console.log(props);
-    return (
-        <View style={styles.screen}>
-            <Text>this is categories screen</Text>
-            <Button title="Go To Meals!" onPress={() => {
-                props.navigation.navigate({ routeName: 'CategoryMeals' });
-            }} />
+    // console.log(CATEGORIES);
+    // console.log(props);
+    const renderGridItem = (itemData) => {
+        return (
+            <TouchableOpacity onPress={()=>{
+                props.navigation.navigate({routeName: 'CategoryMeals'});
+            }} style={styles.gridItem}>
+            <View>
+                <Text>
+                    {itemData.item.title}
+                </Text>
+            </View>
+            </TouchableOpacity>
+        );
+    };
+    
 
-            {/* basically below code will start another stack by making CategoryMeals as root screen! */}
-            <Button title="Go To Meals By Create Another Stack!" onPress={() => {
-                props.navigation.replace({ routeName: 'CategoryMeals' });
-            }} />
-        </View>
+    return (
+        <FlatList
+            keyExtractor = {(item,index)=>item.id}
+            numColumns={2}
+            data={CATEGORIES}
+            renderItem= {renderGridItem}
+        />
     );
+};
+
+CategoriesScreen.navigationOptions = {
+    headerTitle: 'Meals Categories',
+    headerStyle: {
+        backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : '',
+    },
+    headerTintColor: Platform.OS === 'ios' ? Colors.primaryColor : 'white',
 };
 
 const styles = StyleSheet.create({
@@ -24,6 +47,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'center',
     },
+    gridItem:{
+        flex: 1, 
+        margin: 15,  
+        height: 150,     
+    }
 });
 
 export default CategoriesScreen;
